@@ -145,9 +145,115 @@ abstract 与 final ，互斥永远不能同时出现！
 
 
 
+▲ Java 9 为接口增加 private 方法。
+
+​	—— 由于接口中的 default 方法本质就是实例方法， 那么多个实例方法之间很可能出现 “ 公共部分 ” ，这个 “ 公共部分 ” 就应该被抽取到 “ 工具方法中 ” 。而 “ 工具方法 ” 又希望被隐藏，所以用 private 修饰。
+
+“ 工具方法 ” 的本质：用于为接口中（实例方法）提供支持。
 
 
 
+▲ 接口调用静态方法。
+
+​	从java 8 开始，接口当中允许定义静态方法。
+
+【注意事项】：不能通过接口实现类的对象来调用接口中的静态方法。
+
+【正确用法】：通过接口名称，直接调用其中的静态方法。
+
+~~~java
+public interface StaticTest {
+
+	public static void sta1() {	// public 可以省略 
+		
+		System.out.println("这是一个 static 方法");
+	}
+}
+
+======================================================================================================
+    
+public class StaticDemo {
+	
+	public static void main(String[] args) {
+		
+		StaticTest.sta1();	// 成功调用
+	}
+
+}
+
+~~~
 
 
+
+▲ 接口作为成员变量；
+
+~~~java
+public interface Skil {
+	
+	void use();	// 技能；
+	
+}
+
+~~~
+
+~~~java
+public class ShiJiNen implements Skil{
+	public void use() {	// 实现技能；
+		System.out.println("biu~biu~biu~");
+	}
+}
+
+~~~
+
+~~~java
+public class ChenBan {
+	private String name;
+	private Skil skil;	// 接口作为成员变量；
+	
+	public void ChenBan() {};
+
+	public void ChenBan(String name,Skil skil) {
+		this.name = name;
+		this.skil = skil;
+	}
+	
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setSkil(Skil skil) {
+		this.skil = skil;
+	}
+	
+	public Skil getSkil() {
+		return skil;
+	}
+	
+	
+	public void start() {
+		System.out.println("我的名字叫" + name + ", 开始释放技能……");
+		skil.use(); // 调用技能；
+		System.out.println("技能释放完毕！");
+	}
+	
+}
+~~~
+
+~~~java
+public class CenBanTest {
+	public static void main(String[] args) {
+		ChenBan st = new ChenBan();
+		st.setName("妲己");
+		st.setSkil(new ShiJiNen());
+		
+		st.start();
+		
+	}
+}
+~~~
 
